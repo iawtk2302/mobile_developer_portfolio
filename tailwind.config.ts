@@ -40,6 +40,7 @@ const config: Config = {
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
+          light: 'rgba(224, 242, 254, 0.8)',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',

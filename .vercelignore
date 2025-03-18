@@ -1,0 +1,22 @@
+# Development files
+.git
+.github
+.vscode
+.idea
+
+# Build artifacts
+.next
+node_modules
+yarn-error.log
+npm-debug.log
+
+# Environment files (they should be set up in Vercel dashboard)
+.env
+.env.local
+.env.development
+.env.production
+
+# Documentation and other non-necessary files
+docs
+README.md
+LICENSE

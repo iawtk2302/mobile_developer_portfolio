@@ -1,6 +1,7 @@
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { EmailJsProvider } from "@/components/email-js-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -8,6 +9,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tuankhoi-portfolio.vercel.app'),
   title: "Tuan Khoi | Mobile Developer",
   description:
     "Experienced Mobile Developer specializing in Flutter and native app development",
@@ -15,26 +17,19 @@ export const metadata: Metadata = {
     title: "Tuan Khoi | Mobile Developer",
     description:
       "Experienced Mobile Developer specializing in Flutter and native app development",
-    url: "https://johndoe.dev",
+    url: "https://tuankhoi-portfolio.vercel.app",
     siteName: "Tuan Khoi Portfolio",
     images: [
       {
         url: "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6",
         width: 1200,
         height: 630,
-        alt: "John Doe - Mobile Developer",
+        alt: "Tuan Khoi - Mobile Developer",
       },
     ],
     locale: "en_US",
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "John Doe | Mobile Developer",
-    description:
-      "Experienced Mobile Developer specializing in Flutter and native app development",
-    images: ["https://images.unsplash.com/photo-1555774698-0b77e0d5fac6"],
-  },
+  }
 };
 
 export default function RootLayout({
@@ -51,13 +46,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col items-center">
-            <Navbar />
-            <main className="flex-1 w-full flex flex-col items-center pt-4">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <EmailJsProvider>
+            <div className="flex min-h-screen flex-col items-center">
+              <Navbar />
+              <main className="flex-1 w-full flex flex-col items-center pt-4">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </EmailJsProvider>
         </ThemeProvider>
       </body>
     </html>

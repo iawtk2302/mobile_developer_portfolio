@@ -1,4 +1,4 @@
-import { Linkedin } from "lucide-react";
+import { Linkedin, Mail } from "lucide-react";
 import { GitHubIcon } from "@/components/icons";
 import Link from "next/link";
 
@@ -16,7 +16,13 @@ export function Footer() {
 
         <div className="flex flex-1 items-center justify-end space-x-4">
           <Link
-            href="https://github.com"
+            href="mailto:work.tuankhoi.2302@gmail.com"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <Mail className="h-5 w-5" />
+          </Link>
+          <Link
+            href="https://github.com/iawtk2302"
             target="_blank"
             rel="noreferrer"
             className="text-muted-foreground hover:text-foreground"
@@ -24,7 +30,7 @@ export function Footer() {
             <GitHubIcon className="h-5 w-5" />
           </Link>
           <Link
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/khoihaycuoi"
             target="_blank"
             rel="noreferrer"
             className="text-muted-foreground hover:text-foreground"

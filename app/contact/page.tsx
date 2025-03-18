@@ -1,34 +1,101 @@
 "use client";
 
+import { GitHubIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
+import { emailJsConfig, isEmailJsConfigured } from "@/lib/config";
+import emailjs from "@emailjs/browser";
+import { motion, AnimatePresence } from "framer-motion";
 import { Linkedin, Mail, MessageSquare, Send } from "lucide-react";
-import { GitHubIcon } from "@/components/icons";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+
+const formVariants = {
+  container: {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  },
+  item: {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.3 }
+    }
+  },
+  success: {
+    scale: [1, 1.02, 1],
+    transition: { duration: 0.5 }
+  }
+};
 
 export default function Contact() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Check if EmailJS is configured using the helper function
+      if (!isEmailJsConfigured()) {
+        console.error("EmailJS configuration is missing");
+        toast({
+          title: "Configuration Error",
+          description:
+            "The contact form is not properly configured. Please set up EmailJS credentials.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-    toast({
-      title: "Message sent!",
-      description: "Thanks for reaching out. I'll get back to you soon.",
-    });
+      // Get the configuration values from our centralized config
+      const { serviceId, templateId, publicKey } = emailJsConfig;
 
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+      if (formRef.current) {
+        // Since EmailJS is already initialized in the EmailJsProvider,
+        // we can just call sendForm with the service ID and template ID
+        const result = await emailjs.sendForm(
+          serviceId,
+          templateId,
+          formRef.current
+        );
+
+        if (result.text === "OK") {
+          toast({
+            title: "Message sent!",
+            description: "Thanks for reaching out. I'll get back to you soon.",
+          });
+          formRef.current.reset();
+          // Add success animation
+          const formElement = formRef.current;
+          if (formElement) {
+            const motionForm = formElement as unknown as { animate: (variants: any) => void };
+            motionForm.animate(formVariants.success);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      toast({
+        title: "Error sending message",
+        description:
+          "There was a problem sending your message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,26 +117,75 @@ export default function Contact() {
             </p>
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Connect with me</h2>
-              <div className="flex flex-col gap-4">
-                <Button variant="outline" asChild className="justify-start">
-                  <Link href="mailto:john@example.com">
-                    <Mail className="mr-2 h-4 w-4" />
-                    john@example.com
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild className="justify-start">
-                  <Link href="https://github.com" target="_blank">
-                    <GitHubIcon className="mr-2 h-4 w-4" />
-                    GitHub
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild className="justify-start">
-                  <Link href="https://linkedin.com" target="_blank">
-                    <Linkedin className="mr-2 h-4 w-4" />
-                    LinkedIn
-                  </Link>
-                </Button>
-              </div>
+              <motion.div 
+                className="flex flex-col gap-4"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { 
+                    opacity: 1,
+                    transition: { staggerChildren: 0.1 }
+                  }
+                }}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, x: -20 },
+                    visible: { opacity: 1, x: 0 }
+                  }}
+                >
+                  <Button 
+                    variant="outline" 
+                    asChild 
+                    className="justify-start w-full transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgb(0,0,0,0.1)] dark:hover:shadow-[0_4px_20px_rgba(255,255,255,0.1)]"
+                  >
+                    <Link href="mailto:work.tuankhoi.2302@gmail.com">
+                      <Mail className="mr-2 h-4 w-4" />
+                      work.tuankhoi.2302@gmail.com
+                    </Link>
+                  </Button>
+                </motion.div>
+
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, x: -20 },
+                    visible: { opacity: 1, x: 0 }
+                  }}
+                >
+                  <Button 
+                    variant="outline" 
+                    asChild 
+                    className="justify-start w-full transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgb(0,0,0,0.1)] dark:hover:shadow-[0_4px_20px_rgba(255,255,255,0.1)]"
+                  >
+                    <Link href="https://github.com/iawtk2302" target="_blank">
+                      <GitHubIcon className="mr-2 h-4 w-4" />
+                      GitHub
+                    </Link>
+                  </Button>
+                </motion.div>
+
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, x: -20 },
+                    visible: { opacity: 1, x: 0 }
+                  }}
+                >
+                  <Button 
+                    variant="outline" 
+                    asChild 
+                    className="justify-start w-full transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_4px_20px_rgb(0,0,0,0.1)] dark:hover:shadow-[0_4px_20px_rgba(255,255,255,0.1)]"
+                  >
+                    <Link
+                      href="https://www.linkedin.com/in/khoihaycuoi"
+                      target="_blank"
+                    >
+                      <Linkedin className="mr-2 h-4 w-4" />
+                      LinkedIn
+                    </Link>
+                  </Button>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
 
@@ -84,12 +200,25 @@ export default function Contact() {
               <MessageSquare className="h-5 w-5" />
               <h2 className="text-xl font-semibold">Send a Message</h2>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
+            <motion.form 
+              ref={formRef} 
+              onSubmit={handleSubmit} 
+              className="space-y-4"
+              variants={formVariants.container}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div 
+                className="space-y-2"
+                variants={formVariants.item}
+              >
                 <Label htmlFor="name">Name</Label>
                 <Input id="name" name="name" placeholder="Your name" required />
-              </div>
-              <div className="space-y-2">
+              </motion.div>
+              <motion.div 
+                className="space-y-2"
+                variants={formVariants.item}
+              >
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -98,8 +227,11 @@ export default function Contact() {
                   placeholder="your@email.com"
                   required
                 />
-              </div>
-              <div className="space-y-2">
+              </motion.div>
+              <motion.div 
+                className="space-y-2"
+                variants={formVariants.item}
+              >
                 <Label htmlFor="message">Message</Label>
                 <Textarea
                   id="message"
@@ -108,18 +240,31 @@ export default function Contact() {
                   className="min-h-[150px]"
                   required
                 />
-              </div>
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  "Sending..."
-                ) : (
-                  <>
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Message
-                  </>
-                )}
-              </Button>
-            </form>
+              </motion.div>
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 10 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+              >
+                <motion.div whileTap={{ scale: 0.98 }} className="w-full">
+                  <Button 
+                    type="submit" 
+                    className="w-full transition-all duration-300 hover:scale-[1.02]" 
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      "Sending..."
+                    ) : (
+                      <>
+                        <Send className="mr-2 h-4 w-4" />
+                        Send Message
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+              </motion.div>
+            </motion.form>
           </motion.div>
         </div>
       </motion.div>
