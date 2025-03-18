@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "Tuan Khoi Portfolio",
     images: [
       {
-        url: "https://tuankhoidev.com/images/thumbnail/thumbnail.jpg",
+        url: "/images/thumbnail/thumbnail.jpg",
         width: 1200,
         height: 630,
         alt: "Tuan Khoi - Mobile Developer",
