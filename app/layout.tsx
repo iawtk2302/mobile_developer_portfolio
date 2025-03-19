@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     "Experienced Mobile Developer specializing in Flutter and native app development",
   icons: {
     icon: "/icons/favicon.ico",
+    apple: "/icons/apple-touch-icon.png",
     shortcut: "/icons/favicon-16x16.png",
   },
   openGraph: {
